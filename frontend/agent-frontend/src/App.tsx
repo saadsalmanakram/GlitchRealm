@@ -15,10 +15,10 @@ const App = () => {
   }, []);
 
   return (
-    <div className={`flex flex-col min-h-screen bg-gradient-to-br from-gray-900 via-sky-900 to-gray-800 text-white font-sans ${isLoaded ? "opacity-100" : "opacity-0"} transition-opacity duration-1000 ease-in-out`}>
+    <div className={`flex flex-col h-screen bg-gradient-to-br from-gray-900 via-sky-900 to-gray-800 text-white font-sans ${isLoaded ? "opacity-100" : "opacity-0"} transition-opacity duration-1000 ease-in-out`}>
       <Header /> 
 
-      <main className="flex-grow flex flex-col">
+      <main className="flex-1 flex flex-col overflow-hidden">
         <ChatApp />
       </main>
 
