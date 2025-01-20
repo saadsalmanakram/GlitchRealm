@@ -3,10 +3,10 @@ import axios from 'axios';
 
 const ChatApp = () => {
   const [userMessage, setUserMessage] = useState('');
-  const [chatHistory, setChatHistory] = useState([]);
+  const [chatHistory, setChatHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const handleMessageChange = (e) => {
+  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserMessage(e.target.value);
   };
 
@@ -36,7 +36,7 @@ const ChatApp = () => {
   };
 
   return (
-    <div className="chat-app">
+    <div className="chat-app-container">
       <div className="chat-history">
         {chatHistory.map((chat, index) => (
           <div

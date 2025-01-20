@@ -18,10 +18,13 @@ def get_openai_response(request):
     conversation_history.append({"role": "user", "content": user_message})
 
     try:
+        # OpenAI API call (updated to latest API)
         response = openai.ChatCompletion.create(
-            model="gpt-4",   
+            model="gpt-4",  # or gpt-3.5-turbo, depending on the model you use
             messages=conversation_history
         )
+        
+        # Extract the AI's response
         ai_response = response['choices'][0]['message']['content']
 
         # Save the conversation to the database
@@ -37,5 +40,5 @@ def get_openai_response(request):
             "conversation_history": ConversationSerializer(conversation, many=True).data
         })
 
-    except openai.error.OpenAIError as e:
+    except openai.OpenAIError as e:  # Updated error handling
         return JsonResponse({"error": str(e)}, status=500)

@@ -48,7 +48,6 @@ body {
   background: rgba(255, 255, 255, 0.7); /* Slightly more opaque background on focus */
 }
 
-
 /* Shiny Gradient Effect for the Search Bar */
 .shiny-glossy-effect {
   background: linear-gradient(
@@ -75,4 +74,102 @@ body {
 .shiny-glossy-effect:focus {
   border-color: #4fa3f7; /* Add a glowing effect on focus */
   box-shadow: 0 0 15px rgba(79, 163, 247, 0.7);
+}
+
+/* Chat App Styles */
+.chat-app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-between;
+  padding: 20px;
+  background: #1a1a1a; /* Dark background for the entire app */
+}
+
+.chat-history {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #222; /* Slightly lighter background for the chat history */
+  border-radius: 10px;
+}
+
+.chat-message {
+  max-width: 75%;
+  padding: 12px;
+  border-radius: 15px;
+  margin-bottom: 12px;
+  display: inline-block;
+  clear: both;
+}
+
+.chat-message.user {
+  background-color: #0066cc;
+  color: #fff;
+  align-self: flex-end;
+}
+
+.chat-message.ai {
+  background-color: #333;
+  color: #ddd;
+  align-self: flex-start;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #222;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.input-container input {
+  flex-grow: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  margin-right: 10px;
+  background-color: #444;
+  color: #fff;
+}
+
+.input-container input:focus {
+  outline: none;
+  background-color: #555;
+}
+
+.input-container button {
+  padding: 10px 20px;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.input-container button:hover {
+  background-color: #005bb5;
+}
+
+.input-container button:disabled {
+  background-color: #777;
+  cursor: not-allowed;
+}
+
+.chat-app-container .loading {
+  text-align: center;
+  color: #ddd;
+  font-style: italic;
+}
+
+/* Header and Footer */
+header, footer {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  border-radius: 10px;
 }
