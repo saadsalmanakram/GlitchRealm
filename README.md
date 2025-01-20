@@ -1,11 +1,11 @@
 
 ---
 
-# AI Chatbot with Django Backend and Hugging Face Integration
+# Artilence Project: AI Chatbot with Django Backend and Hugging Face Integration
 
 ## Overview
 
-This project is an AI-powered chatbot built with a **Django backend** and integrated with the **Hugging Face API** for generating intelligent responses. The chatbot listens for user messages and sends them to Hugging Face's pre-trained models for processing. The backend API is designed to receive `POST` requests with a user's message and return a generated response. The application also provides a frontend interface to interact with the chatbot.
+The **Artilence Project** is an AI-powered chatbot built with a **Django backend** and integrated with the **Hugging Face API** for generating intelligent responses. The chatbot listens for user messages, sends them to Hugging Face's pre-trained models for processing, and returns generated responses. The backend API is designed to receive `POST` requests with a user's message and provide an AI-generated response. The project also includes a frontend interface to interact with the chatbot.
 
 ## Features
 
@@ -32,7 +32,7 @@ This project is an AI-powered chatbot built with a **Django backend** and integr
 The project is structured into the following key components:
 
 - **Backend (Django)**:
-  - `chat/`: Django app handling the chatbot API
+  - `chat/`: Django app handling the chatbot API.
   - `backend/`: The root directory for the Django project, containing settings, URLs, and other configurations.
   
 - **Frontend (React)**:
@@ -45,8 +45,8 @@ The project is structured into the following key components:
 To get started, clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/saadsalmanakram/ai-chatbot.git
-cd ai-chatbot
+git clone https://github.com/saadsalmanakram/artilence-project.git
+cd artilence-project
 ```
 
 ### 2. **Backend Setup (Django)**
