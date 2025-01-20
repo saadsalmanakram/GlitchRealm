@@ -74,7 +74,7 @@ def chat_api(request):
 
                 if response.status_code == 200:
                     conversation.ai_response = response.json()[0].get('generated_text', conversation.ai_response)
-                
+
                 conversation.save()
 
             return JsonResponse({"message": "Conversation updated", "id": conversation.id, "user_message": conversation.user_message, "ai_response": conversation.ai_response})
