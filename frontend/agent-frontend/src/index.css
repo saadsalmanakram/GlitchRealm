@@ -1,0 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+}
+
+/* Custom CSS for Shining Gradient Effect */
+@keyframes shine {
+  0% {
+    background-position: -200%;
+  }
+  100% {
+    background-position: 200%;
+  }
+}
+
+.shining-gradient {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.5) 100%
+  );
+  background-size: 200%;
+  animation: shine 2s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Custom glossy effect for the search bar */
+.mirror-effect {
+  background: rgba(255, 255, 255, 0.5); /* Transparent white background */
+  border: 1px solid #ccc;
+  border-radius: 50px; /* Fully rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Mirror-like effect */
+  color: #333; /* Dark color for visible text */
+  backdrop-filter: blur(10px); /* Adds blur to background for mirror effect */
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
+.mirror-effect:focus {
+  outline: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Stronger shadow on focus */
+  border-color: rgba(255, 255, 255, 0.8); /* Brighter border on focus */
+  background: rgba(255, 255, 255, 0.7); /* Slightly more opaque background on focus */
+}
+
+/* Shiny Gradient Effect for the Search Bar */
+.shiny-glossy-effect {
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.6) 25%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.6) 75%
+  );
+  background-size: 400% 400%;
+  animation: shine 2s ease infinite;
+  border-radius: 50px;
+  border: 2px solid #ccc;
+  padding: 12px 20px;
+  width: 100%;
+  max-width: 400px;
+  font-size: 16px;
+  color: #333;
+  text-align: center;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.shiny-glossy-effect:focus {
+  border-color: #4fa3f7; /* Add a glowing effect on focus */
+  box-shadow: 0 0 15px rgba(79, 163, 247, 0.7);
+}
+
+/* Chat App Styles */
+.chat-app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-between;
+  padding: 20px;
+  background: #1a1a1a; /* Dark background for the entire app */
+}
+
+.chat-history {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #222; /* Slightly lighter background for the chat history */
+  border-radius: 10px;
+}
+
+.chat-message {
+  max-width: 70%;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 5px 0;
+  display: block;
+}
+
+.chat-message.user {
+  background-color: #0066cc;
+  color: #fff;
+  text-align: left;
+  margin-right: auto;
+}
+
+.chat-message.ai {
+  background-color: #333;
+  color: #ddd;
+  text-align: right;
+  margin-left: auto;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #222;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.input-container input {
+  flex-grow: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  margin-right: 10px;
+  background-color: #444;
+  color: #fff;
+}
+
+.input-container input:focus {
+  outline: none;
+  background-color: #555;
+}
+
+.input-container button {
+  padding: 10px 20px;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.input-container button:hover {
+  background-color: #005bb5;
+}
+
+.input-container button:disabled {
+  background-color: #777;
+  cursor: not-allowed;
+}
+
+.chat-app-container .loading {
+  text-align: center;
+  color: #ddd;
+  font-style: italic;
+}
+
+/* Header and Footer */
+header, footer {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  border-radius: 10px;
+}
