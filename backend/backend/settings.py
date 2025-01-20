@@ -20,12 +20,12 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# OpenAI API key setup
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'your-openai-api-key')  # Default value for development
+# Hugging Face API key setup
+HUGGINGFACE_API_KEY = os.getenv('HUGGINGFACE_API_KEY', 'your-huggingface-api-key')  # Default value for development
 
 # Check if the API key is loaded correctly
-if not OPENAI_API_KEY:
-    raise ValueError("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
+if not HUGGINGFACE_API_KEY:
+    raise ValueError("Hugging Face API key not found. Please set the HUGGINGFACE_API_KEY environment variable.")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-+_#!e6tz48lo!ih#i=lr2(9k)i_t&0=f-&ko8o%anrnv-)-qxm'
@@ -47,8 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'chat',
-    'corsheaders',
-
+    'corsheaders',  # For handling Cross-Origin Requests
 ]
 
 MIDDLEWARE = [

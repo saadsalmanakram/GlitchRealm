@@ -1,44 +1,37 @@
-import openai
+import requests
 from django.conf import settings
 from django.http import JsonResponse
-from .models import Conversation
-from .serializers import ConversationSerializer
 
-# Initialize OpenAI client (newer syntax)
-client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
-
-def get_openai_response(request):
+def get_huggingface_response(request):
     user_message = request.GET.get("user_message")
     if not user_message:
         return JsonResponse({"error": "User message is required."}, status=400)
 
-    # Retrieve previous conversation history
-    conversations = Conversation.objects.all().values('user_message', 'ai_response')
-    conversation_history = [{"role": "user", "content": msg['user_message']} for msg in conversations]
-    conversation_history.append({"role": "user", "content": user_message})
-
+    # Hugging Face Inference API endpoint for the model
+    url = "https://api-inference.huggingface.co/models/distilbert/distilgpt2"
+    headers = {"Authorization": f"Bearer {settings.HUGGINGFACE_API_KEY}"}
+    payload = {"inputs": user_message}
+    
     try:
-        # Updated OpenAI API call (new syntax)
-        response = client.chat.completions.create(
-            model="gpt-4",
-            messages=conversation_history
-        )
-        
-        # Extract the AI's response
-        ai_response = response.choices[0].message.content
+        # Make POST request to Hugging Face API
+        response = requests.post(url, json=payload, headers=headers)
+        response.raise_for_status()  # Raise an exception for bad status codes
 
-        # Save the conversation to the database
-        conversation = Conversation.objects.create(
-            user_message=user_message,
-            ai_response=ai_response
-        )
+        # Extract response content
+        response_data = response.json()
 
-        # Return the conversation history along with the AI response
+        # Check for model loading status
+        if "error" in response_data:
+            return JsonResponse({"error": response_data["error"], "estimated_time": response_data.get("estimated_time", "unknown")}, status=503)
+
+        ai_response = response_data[0]['generated_text']
+
+        # Return the AI response
         return JsonResponse({
             "user_message": user_message,
-            "ai_response": ai_response,
-            "conversation_history": ConversationSerializer(conversation, many=True).data
+            "ai_response": ai_response
         })
-
-    except openai.OpenAIError as e:  # Corrected error handling
+    
+    except requests.exceptions.RequestException as e:
+        # Handle request errors
         return JsonResponse({"error": str(e)}, status=500)
