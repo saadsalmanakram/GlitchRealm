@@ -15,9 +15,9 @@ const ChatApp = () => {
 
     setLoading(true);
     try {
-      // Send message to Django backend
-      const response = await axios.get('http://127.0.0.1:8000/api/chat/', {
-        params: { user_message: userMessage },
+      // Send message to Django backend (POST request)
+      const response = await axios.post('http://127.0.0.1:8000/api/chat/', {
+        user_message: userMessage,
       });
 
       // Update chat history with both the user message and AI response

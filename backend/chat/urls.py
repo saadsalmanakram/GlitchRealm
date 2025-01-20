@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import get_openai_response
+from .views import generate_text
 
 urlpatterns = [
-    path('chat/', get_openai_response, name='chat-api'),
+    path('generate-text/', generate_text, name='generate_text'),
 ]

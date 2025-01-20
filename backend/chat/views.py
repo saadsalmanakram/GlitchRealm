@@ -1,37 +1,32 @@
+import os
 import requests
-from django.conf import settings
 from django.http import JsonResponse
+from django.conf import settings
 
-def get_huggingface_response(request):
-    user_message = request.GET.get("user_message")
-    if not user_message:
-        return JsonResponse({"error": "User message is required."}, status=400)
-
-    # Hugging Face Inference API endpoint for the model
-    url = "https://api-inference.huggingface.co/models/distilbert/distilgpt2"
-    headers = {"Authorization": f"Bearer {settings.HUGGINGFACE_API_KEY}"}
-    payload = {"inputs": user_message}
+# Function to interact with Hugging Face API
+def generate_text(request):
+    # Get the Hugging Face API key from settings
+    api_key = settings.HUGGINGFACE_API_KEY
     
-    try:
-        # Make POST request to Hugging Face API
-        response = requests.post(url, json=payload, headers=headers)
-        response.raise_for_status()  # Raise an exception for bad status codes
-
-        # Extract response content
-        response_data = response.json()
-
-        # Check for model loading status
-        if "error" in response_data:
-            return JsonResponse({"error": response_data["error"], "estimated_time": response_data.get("estimated_time", "unknown")}, status=503)
-
-        ai_response = response_data[0]['generated_text']
-
-        # Return the AI response
-        return JsonResponse({
-            "user_message": user_message,
-            "ai_response": ai_response
-        })
+    if not api_key:
+        return JsonResponse({"error": "Hugging Face API key is missing!"}, status=400)
     
-    except requests.exceptions.RequestException as e:
-        # Handle request errors
-        return JsonResponse({"error": str(e)}, status=500)
+    # URL of the Hugging Face model you want to interact with (DistilGPT2)
+    url = "https://api-inference.huggingface.co/models/distilbert/distilgpt2"  # DistilGPT2 model
+    headers = {"Authorization": f"Bearer {api_key}"}
+    
+    # Get input text from request
+    input_text = request.GET.get('input_text', 'Hello, how are you?')  # Default value
+    
+    # Payload for the Hugging Face API
+    payload = {"inputs": input_text}
+    
+    # Send the request to Hugging Face API
+    response = requests.post(url, json=payload, headers=headers)
+    
+    # Check for successful response
+    if response.status_code == 200:
+        generated_text = response.json()[0]['generated_text']
+        return JsonResponse({"generated_text": generated_text}, status=200)
+    else:
+        return JsonResponse({"error": response.json()}, status=response.status_code)
