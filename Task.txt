@@ -1,0 +1,113 @@
+Task: Build an AI-Powered Q&A Agent
+
+Objective
+
+Develop a small web application that uses an AI model (OpenAI or any other LLM) to allow users to query and receive answers. The application should maintain a history of the conversation for context.
+
+Requirements
+
+Frontend
+
+Framework: Use a framework of your choice (React, Vue, or Angular preferred).
+
+Functionality:
+
+A simple user interface with:
+
+An input box for the user to type a query.
+
+A submit button to send the query.
+
+A section to display the AI’s responses along with the query history.
+
+Display the conversation history in a user-friendly format (e.g., chat bubbles or a list).
+
+Ensure the UI updates dynamically without requiring a page reload.
+
+ 
+
+Backend
+
+Framework: Use any backend framework (Django, FastAPI, Flask, or Node.js preferred).
+
+Functionality:
+
+Provide an API endpoint to:
+
+Accept a user query.
+
+Forward the query to the chosen AI/LLM (e.g., OpenAI’s GPT model).
+
+Return the AI’s response along with the conversation history.
+
+Store conversation history (in-memory storage like Python dictionaries or JavaScript objects is sufficient for this task).
+
+Implement basic error handling to manage invalid inputs or API failures.
+
+ 
+
+AI Integration
+
+Integrate with an LLM (OpenAI GPT or similar) to generate responses.
+
+Use context from the conversation history to provide better answers (pass the history along with the current query to the AI API).
+
+ 
+
+Additional Requirements
+
+Document your code and explain:
+
+How the AI agent is set up and integrated.
+
+How the conversation history is managed.
+
+Ensure the application is easy to run locally with clear setup instructions.
+
+ 
+
+Deliverables
+
+Codebase:
+
+A GitHub repository with the frontend and backend code.
+
+Include a README.md file with:
+
+Instructions to set up and run the project.
+
+Dependencies required for the project.
+
+Working Application:
+
+The frontend should call the backend API to query the AI and display the responses.
+
+Documentation:
+
+Brief explanation of how the AI agent works.
+
+Description of any challenges faced and how they were addressed.
+
+ 
+
+Evaluation Criteria
+
+Technical Skills:
+
+Code quality and adherence to best practices.
+
+Efficient use of APIs and frameworks.
+
+Functionality:
+
+Smooth integration between frontend and backend.
+
+Correct handling of conversation history.
+
+Creativity:
+
+Design and usability of the frontend.
+
+Innovative approaches to managing conversation history.
+Communication:
+Clarity of documentation and comments in the code.
