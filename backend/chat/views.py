@@ -4,11 +4,11 @@ import requests
 import os
 import json  # Import json for parsing JSON data
 
-# Make sure you have the Hugging Face API key in the environment variables
+# Ensure you have the Hugging Face API key in the environment variables
 HUGGING_FACE_API_KEY = os.getenv("HUGGING_FACE_API_KEY")
 
 # Make the request to Hugging Face API
-@csrf_exempt  # This disables CSRF validation for simplicity (you can enable CSRF protection later)
+@csrf_exempt  # Disables CSRF validation for simplicity (you can enable CSRF protection later)
 def chat_api(request):
     if request.method == 'POST':
         try:
