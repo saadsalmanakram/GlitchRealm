@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Header from './components/Header';  
 import Footer from './components/Footer';
+import ChatApp from './components/ChatApp';
 
 const App = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -21,7 +22,7 @@ const App = () => {
       <Header /> 
 
       <main className="flex-grow">
-        
+        <ChatApp />
       </main>
 
       <Footer /> 
