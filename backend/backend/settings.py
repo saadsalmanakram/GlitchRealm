@@ -11,13 +11,21 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# OpenAI API key setup
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'your-openai-api-key')  # Default value for development
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
+# Check if the API key is loaded correctly
+if not OPENAI_API_KEY:
+    raise ValueError("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-+_#!e6tz48lo!ih#i=lr2(9k)i_t&0=f-&ko8o%anrnv-)-qxm'
