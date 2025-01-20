@@ -4,8 +4,8 @@ from django.http import JsonResponse
 from .models import Conversation
 from .serializers import ConversationSerializer
 
-# Initialize OpenAI client
-openai.api_key = settings.OPENAI_API_KEY
+# Initialize OpenAI client (newer syntax)
+client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
 
 def get_openai_response(request):
     user_message = request.GET.get("user_message")
@@ -18,14 +18,14 @@ def get_openai_response(request):
     conversation_history.append({"role": "user", "content": user_message})
 
     try:
-        # OpenAI API call (updated to latest API)
-        response = openai.ChatCompletion.create(
-            model="gpt-4",  # or gpt-3.5-turbo, depending on the model you use
+        # Updated OpenAI API call (new syntax)
+        response = client.chat.completions.create(
+            model="gpt-4",
             messages=conversation_history
         )
         
         # Extract the AI's response
-        ai_response = response['choices'][0]['message']['content']
+        ai_response = response.choices[0].message.content
 
         # Save the conversation to the database
         conversation = Conversation.objects.create(
@@ -40,5 +40,5 @@ def get_openai_response(request):
             "conversation_history": ConversationSerializer(conversation, many=True).data
         })
 
-    except openai.OpenAIError as e:  # Updated error handling
+    except openai.OpenAIError as e:  # Corrected error handling
         return JsonResponse({"error": str(e)}, status=500)
