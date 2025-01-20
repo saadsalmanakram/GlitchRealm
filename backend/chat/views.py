@@ -16,8 +16,8 @@ def chat_api(request):
             data = json.loads(request.body)
             
             # Get user message from the parsed data
-            user_message = data.get('user_message', '')
-            
+            user_message = data.get('user_message', '').strip()
+
             # If no message is provided, return an error response
             if not user_message:
                 return JsonResponse({"error": "No user_message provided"}, status=400)
@@ -32,15 +32,21 @@ def chat_api(request):
 
             # If Hugging Face API returns an error, send the error response
             if response.status_code != 200:
-                return JsonResponse({"error": "Error from Hugging Face API"}, status=response.status_code)
+                return JsonResponse({"error": "Error from Hugging Face API", "details": response.text}, status=response.status_code)
 
             # Extract the AI response from the Hugging Face API
-            ai_response = response.json()[0]['generated_text']
+            try:
+                ai_response = response.json()[0].get('generated_text', 'No response generated.')
+            except Exception as e:
+                return JsonResponse({"error": f"Error processing Hugging Face response: {str(e)}"}, status=500)
 
             # Return the AI response as JSON
             return JsonResponse({"ai_response": ai_response})
 
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format"}, status=400)
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+            return JsonResponse({"error": f"Internal server error: {str(e)}"}, status=500)
+    
     else:
         return JsonResponse({"error": "Only POST requests are allowed"}, status=405)
