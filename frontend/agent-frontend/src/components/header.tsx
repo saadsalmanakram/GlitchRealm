@@ -6,11 +6,11 @@ const Header = () => {
     <section>
       <header className="flex flex-col items-center py-2">
         <div className="flex justify-center">
-          <a href="https://vite.dev" target="_blank" rel="noopener noreferrer">
+          <a href="https://artilence.com/" target="_blank" rel="noopener noreferrer">
             <img
               src={viteLogo}
               className="w-20 h-20 animate-heartbeat transform transition duration-300 mt-2"
-              alt="Vite logo"
+              alt="Artilence logo"
             />
           </a>
         </div>
