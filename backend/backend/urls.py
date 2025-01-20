@@ -5,3 +5,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('chat.urls')),  # Include the chat app URLs
 ]
+

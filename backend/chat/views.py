@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import json
 import requests
 import os
+import json  # Import json for parsing JSON data
 
 # Make sure you have the Hugging Face API key in the environment variables
 HUGGING_FACE_API_KEY = os.getenv("HUGGING_FACE_API_KEY")
@@ -12,10 +12,12 @@ HUGGING_FACE_API_KEY = os.getenv("HUGGING_FACE_API_KEY")
 def chat_api(request):
     if request.method == 'POST':
         try:
-            # Parse JSON data from the request body
-            body = json.loads(request.body)
-            user_message = body.get('user_message', '')
-
+            # Parse the JSON body of the request
+            data = json.loads(request.body)
+            
+            # Get user message from the parsed data
+            user_message = data.get('user_message', '')
+            
             # If no message is provided, return an error response
             if not user_message:
                 return JsonResponse({"error": "No user_message provided"}, status=400)
@@ -38,9 +40,7 @@ def chat_api(request):
             # Return the AI response as JSON
             return JsonResponse({"ai_response": ai_response})
 
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON format in the request body"}, status=400)
         except Exception as e:
-            return JsonResponse({"error": f"Internal Server Error: {str(e)}"}, status=500)
+            return JsonResponse({"error": str(e)}, status=500)
     else:
         return JsonResponse({"error": "Only POST requests are allowed"}, status=405)
