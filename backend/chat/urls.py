@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import generate_text
+from . import views
 
 urlpatterns = [
-    path('generate-text/', generate_text, name='generate_text'),
+    path('', views.chat_api, name='chat_api'),  # Your chat API view
 ]
