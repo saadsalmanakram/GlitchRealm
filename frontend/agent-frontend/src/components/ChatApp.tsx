@@ -56,6 +56,7 @@ const ChatApp: React.FC = () => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent default action (new line in textarea)
       handleSendMessage();
     }
   };
@@ -95,3 +96,4 @@ const ChatApp: React.FC = () => {
 };
 
 export default ChatApp;
+
