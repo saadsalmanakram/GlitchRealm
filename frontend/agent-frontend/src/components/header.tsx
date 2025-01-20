@@ -9,12 +9,12 @@ const Header = () => {
           <a href="https://vite.dev" target="_blank" rel="noopener noreferrer">
             <img
               src={viteLogo}
-              className="w-20 h-20 animate-heartbeat transform transition duration-300"
+              className="w-20 h-20 animate-heartbeat transform transition duration-300 mt-2"
               alt="Vite logo"
             />
           </a>
         </div>
-        <h1 className="lg:text-4xl font-extrabold bg-clip-text text-transparent shining-gradient">
+        <h1 className="lg:text-4xl font-extrabold bg-clip-text text-transparent shining-gradient mt-5">
           Artilence Agent
         </h1>
       </header>

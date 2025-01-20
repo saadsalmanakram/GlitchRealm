@@ -1,31 +1,33 @@
 import { useState, useEffect } from "react";
 import Header from './components/Header';  
+import Footer from './components/Footer';
 
 const App = () => {
-
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // Trigger the transition effect when the component mounts
     const timer = setTimeout(() => {
       setIsLoaded(true);
-    }, 500); // Delay before applying the loaded state for smooth transition
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-gray-900 via-sky-900 to-gray-800 text-white font-sans ${
+    <div className={`flex flex-col min-h-screen bg-gradient-to-br from-gray-900 via-sky-900 to-gray-800 text-white font-sans ${
         isLoaded ? "opacity-100" : "opacity-0"
       } transition-opacity duration-1000 ease-in-out`}>
 
-      <div>
-        <Header /> 
-      </div>
+      <Header /> 
 
+      <main className="flex-grow">
+        
+      </main>
 
+      <Footer /> 
+      
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
