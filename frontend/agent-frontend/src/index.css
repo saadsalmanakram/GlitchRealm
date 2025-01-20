@@ -173,3 +173,53 @@ header, footer {
   text-align: center;
   border-radius: 10px;
 }
+
+/* Send Button Animations */
+@keyframes press {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 10px rgba(0, 102, 204, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 102, 204, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(0, 102, 204, 0.6);
+  }
+}
+
+/* Animated Send Button */
+.send-button {
+  background-color: #0066cc;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.send-button:hover {
+  background-color: #005bb5;
+  animation: pulse-glow 1.5s infinite alternate;
+}
+
+.send-button:active {
+  animation: press 0.2s ease-in-out;
+}
+
+.send-button:disabled {
+  background-color: #777;
+  cursor: not-allowed;
+  box-shadow: none;
+}
