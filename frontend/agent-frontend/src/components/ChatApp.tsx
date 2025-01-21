@@ -53,6 +53,12 @@ export default function ChatApp() {
     setLoading(false);
   };
 
+  const handleNewChat = () => {
+    setChatHistory([]);
+    setUserMessage('');
+    setError(null);
+  };
+
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -72,7 +78,7 @@ export default function ChatApp() {
 
       {error && <div className="error-message">{error}</div>}
 
-      <div className="input-container" style={{ position: 'sticky', bottom: '0', background: '#fff', padding: '10px' }}>
+      <div className="input-container" style={{ position: 'sticky', bottom: '0', background: '#fff', padding: '10px', display: 'flex', gap: '10px' }}>
         <input
           type="text"
           value={userMessage}
@@ -81,10 +87,12 @@ export default function ChatApp() {
           placeholder="Type a message..."
           disabled={loading}
           className="input-field"
+          style={{ flexGrow: 1 }}
         />
         <button onClick={handleSendMessage} disabled={loading} className="send-button">
           {loading ? 'Sending...' : 'Send'}
         </button>
+        <button onClick={handleNewChat} className="new-chat-button">New Chat</button>
       </div>
     </div>
   );
