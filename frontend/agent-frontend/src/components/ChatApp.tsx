@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import axios from 'axios';
 
 interface ChatMessage {
@@ -6,7 +6,7 @@ interface ChatMessage {
   message: string;
 }
 
-const ChatApp: React.FC = () => {
+export default function ChatApp() {
   const [userMessage, setUserMessage] = useState('');
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ const ChatApp: React.FC = () => {
     }
   }, [chatHistory]);
 
-  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMessageChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserMessage(e.target.value);
   };
 
@@ -53,7 +53,7 @@ const ChatApp: React.FC = () => {
     setLoading(false);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       handleSendMessage();
@@ -88,6 +88,4 @@ const ChatApp: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default ChatApp;
+}
