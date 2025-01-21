@@ -11,9 +11,13 @@ from .models import Conversation
 logger = logging.getLogger(__name__)
 
 # Ensure Hugging Face API key is set in environment variables
-HUGGING_FACE_API_KEY = os.getenv("HUGGING_FACE_API_KEY")
+HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
 
-# URL for Hugging Face API model
+if not HUGGINGFACE_API_KEY:
+    logger.error("Hugging Face API key is missing!")
+    raise ValueError("Hugging Face API key is required but not found!")
+
+# URL for Hugging Face API model (Choose a chat-compatible model)
 HF_API_URL = "https://api-inference.huggingface.co/models/distilbert/distilgpt2"
 
 # Function to interact with the Hugging Face API
@@ -21,46 +25,62 @@ def get_ai_response(user_message):
     """
     Communicates with the Hugging Face API to generate a response based on the user's message.
     """
-    headers = {"Authorization": f"Bearer {HUGGING_FACE_API_KEY}"}
+    headers = {"Authorization": f"Bearer {HUGGINGFACE_API_KEY}"}
     payload = {"inputs": user_message}
 
     try:
         response = requests.post(HF_API_URL, json=payload, headers=headers)
+        response_json = response.json()
+
+        # Log the API response for debugging
+        logger.info(f"Hugging Face API Response: {response_json}")
 
         if response.status_code == 200:
-            return response.json()[0].get('generated_text', 'No response generated.')
-        else:
-            logger.error(f"Error from Hugging Face API: {response.text}")
-            return "Sorry, I couldn't generate a response right now."
+            if isinstance(response_json, list) and len(response_json) > 0:
+                return response_json[0].get("generated_text", "No response generated.")
+            elif isinstance(response_json, dict) and "generated_text" in response_json:
+                return response_json["generated_text"]
+            else:
+                return "No valid response received from AI."
+
+        elif "error" in response_json:
+            logger.error(f"Hugging Face API Error: {response_json['error']}")
+            return f"Error: {response_json['error']}"
+
+        return "Sorry, I couldn't generate a response right now."
 
     except requests.exceptions.RequestException as e:
         logger.error(f"Request error: {e}")
         return "There was an error processing your request. Please try again later."
 
+
 @csrf_exempt
 def chat_api(request):
     """Handles full CRUD operations for chatbot conversations."""
-    if request.method == 'POST':
+    if request.method == "POST":
         try:
             # Parse request body
             data = json.loads(request.body)
-            user_message = data.get('user_message', '').strip()
+            user_message = data.get("user_message", "").strip()
 
             if not user_message:
                 return JsonResponse({"error": "No user_message provided"}, status=400)
 
             # Get AI response
             ai_response = get_ai_response(user_message)
+            logger.info(f"User Message: {user_message}, AI Response: {ai_response}")
 
             # Store conversation in the database
             conversation = Conversation.objects.create(user_message=user_message, ai_response=ai_response)
 
-            return JsonResponse({
-                "id": conversation.id,
-                "user_message": user_message,
-                "ai_response": ai_response,
-                "created_at": conversation.created_at.isoformat()
-            })
+            return JsonResponse(
+                {
+                    "id": conversation.id,
+                    "user_message": user_message,
+                    "ai_response": ai_response,
+                    "created_at": conversation.created_at.isoformat(),
+                }
+            )
 
         except json.JSONDecodeError:
             logger.error("Invalid JSON format in request body.")
@@ -70,12 +90,12 @@ def chat_api(request):
             logger.error(f"Internal server error: {str(e)}")
             return JsonResponse({"error": f"Internal server error: {str(e)}"}, status=500)
 
-    elif request.method == 'GET':
+    elif request.method == "GET":
         """Retrieve past chatbot conversations."""
         conversations = Conversation.objects.all().values("id", "user_message", "ai_response", "created_at")
         return JsonResponse({"conversations": list(conversations)}, safe=False)
 
-    elif request.method in ['PUT', 'PATCH']:
+    elif request.method in ["PUT", "PATCH"]:
         """Update an existing chatbot conversation."""
         try:
             data = json.loads(request.body)
@@ -98,13 +118,15 @@ def chat_api(request):
 
                 conversation.save()
 
-            return JsonResponse({
-                "message": "Conversation updated",
-                "id": conversation.id,
-                "user_message": conversation.user_message,
-                "ai_response": conversation.ai_response,
-                "updated_at": now().isoformat()
-            })
+            return JsonResponse(
+                {
+                    "message": "Conversation updated",
+                    "id": conversation.id,
+                    "user_message": conversation.user_message,
+                    "ai_response": conversation.ai_response,
+                    "updated_at": now().isoformat(),
+                }
+            )
 
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON format"}, status=400)
@@ -113,7 +135,7 @@ def chat_api(request):
             logger.error(f"Internal server error: {str(e)}")
             return JsonResponse({"error": f"Internal server error: {str(e)}"}, status=500)
 
-    elif request.method == 'DELETE':
+    elif request.method == "DELETE":
         """Delete a chatbot conversation."""
         try:
             data = json.loads(request.body)
