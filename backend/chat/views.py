@@ -26,29 +26,24 @@ HF_API_URL = "https://api-inference.huggingface.co/models/meta-llama/Llama-3.2-1
 # In-memory storage for chat history (Resets on server restart)
 chat_history = ""
 
-# Load the chat history (this can be extended to file or database storage for persistence)
-def load_chat_history():
-    global chat_history
-    return chat_history
-
-# Save the chat history (can be saved to file or database if needed)
-def save_chat_history(history):
-    global chat_history
-    chat_history = history
-
 # Function to interact with the Hugging Face API
 def get_ai_response(user_message):
     """
     Communicates with the Hugging Face API to generate a response based on the user's message.
-    Responds simply without additional explanations.
     """
     global chat_history  # Use global to modify chat_history variable
 
     # Append the user message to the chat history
     chat_history += f"User: {user_message}\n"
 
-    # Define the simple response logic
-    prompt = f"User: {user_message}\nAssistant:"
+    # Define how the AI should respond. This acts as a prompt for the AI.
+    prompt = f"""
+    You are a friendly assistant who helps users with their questions in a warm and approachable way.
+    Respond clearly, kindly, and empathetically to any questions asked. 
+    If the user asks casual questions like "How are you?", respond in a friendly and human-like manner.
+    The user has asked:
+    {user_message}
+    """
 
     headers = {
         "Authorization": f"Bearer {HUGGINGFACE_API_KEY}",
@@ -56,7 +51,7 @@ def get_ai_response(user_message):
     }
 
     payload = {
-        "inputs": prompt,  # Send the structured prompt to guide AI response
+        "inputs": prompt,  # Send the more structured prompt to guide AI response
     }
 
     try:
@@ -83,10 +78,7 @@ def get_ai_response(user_message):
             # Append the AI response to the chat history
             chat_history += f"AI: {ai_response}\n"
 
-            # Save the updated chat history to the file (or database)
-            save_chat_history(chat_history)
-
-            return ai_response.strip()  # Strip any excess space or formatting
+            return ai_response
 
         elif "error" in response_json:
             logger.error(f"Hugging Face API Error: {response_json['error']}")
@@ -98,7 +90,7 @@ def get_ai_response(user_message):
         logger.error(f"Request error: {e}")
         return "There was an error processing your request. Please try again later."
 
-
+# API endpoint to handle the chat requests
 @csrf_exempt
 def chat_api(request):
     """Handles full CRUD operations for chatbot conversations."""
@@ -114,6 +106,8 @@ def chat_api(request):
             # Get AI response
             ai_response = get_ai_response(user_message)
             logger.info(f"User Message: {user_message}, AI Response: {ai_response}")
+
+            # No database storage here, so no conversation is saved.
 
             return JsonResponse(
                 {
@@ -132,14 +126,8 @@ def chat_api(request):
             return JsonResponse({"error": f"Internal server error: {str(e)}"}, status=500)
 
     elif request.method == "GET":
-        """Retrieve conversation history."""
-        # Load chat history if available
-        history = load_chat_history()
-        if history:
-            return JsonResponse({"history": history.strip()}, safe=False)
-        else:
-            return JsonResponse({"message": "No conversation history stored."}, status=200)
+        """No history to retrieve as we are not saving any conversations."""
+        return JsonResponse({"message": "No conversation history stored."}, status=200)
 
     else:
         return JsonResponse({"error": "Method not allowed"}, status=405)
-
