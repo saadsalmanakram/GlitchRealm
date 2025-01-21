@@ -1,9 +1,9 @@
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import requests
-import os
 import json
 import logging
+import os
+import requests
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.utils.timezone import now
 from .models import Conversation
 
@@ -57,9 +57,11 @@ def get_ai_response(user_message):
 @csrf_exempt
 def chat_api(request):
     """Handles full CRUD operations for chatbot conversations."""
-    if request.method == "POST":
-        try:
-            # Parse request body
+    try:
+        if request.method == "POST":
+            # Log the request body to help debug
+            logger.info(f"POST request body: {request.body.decode('utf-8')}")
+
             data = json.loads(request.body)
             user_message = data.get("user_message", "").strip()
 
@@ -68,9 +70,6 @@ def chat_api(request):
 
             # Get AI response
             ai_response = get_ai_response(user_message)
-            logger.info(f"User Message: {user_message}, AI Response: {ai_response}")
-
-            # Store conversation in the database
             conversation = Conversation.objects.create(user_message=user_message, ai_response=ai_response)
 
             return JsonResponse(
@@ -82,22 +81,15 @@ def chat_api(request):
                 }
             )
 
-        except json.JSONDecodeError:
-            logger.error("Invalid JSON format in request body.")
-            return JsonResponse({"error": "Invalid JSON format"}, status=400)
+        elif request.method == "GET":
+            """Retrieve past chatbot conversations."""
+            conversations = Conversation.objects.all().values("id", "user_message", "ai_response", "created_at")
+            return JsonResponse({"conversations": list(conversations)}, safe=False)
 
-        except Exception as e:
-            logger.error(f"Internal server error: {str(e)}")
-            return JsonResponse({"error": f"Internal server error: {str(e)}"}, status=500)
+        elif request.method in ["PUT", "PATCH"]:
+            """Update an existing chatbot conversation."""
+            logger.info(f"{request.method} request body: {request.body.decode('utf-8')}")
 
-    elif request.method == "GET":
-        """Retrieve past chatbot conversations."""
-        conversations = Conversation.objects.all().values("id", "user_message", "ai_response", "created_at")
-        return JsonResponse({"conversations": list(conversations)}, safe=False)
-
-    elif request.method in ["PUT", "PATCH"]:
-        """Update an existing chatbot conversation."""
-        try:
             data = json.loads(request.body)
             conversation_id = data.get("id")
             new_user_message = data.get("user_message", "").strip()
@@ -128,16 +120,9 @@ def chat_api(request):
                 }
             )
 
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON format"}, status=400)
-
-        except Exception as e:
-            logger.error(f"Internal server error: {str(e)}")
-            return JsonResponse({"error": f"Internal server error: {str(e)}"}, status=500)
-
-    elif request.method == "DELETE":
-        """Delete a chatbot conversation."""
-        try:
+        elif request.method == "DELETE":
+            """Delete a chatbot conversation."""
+            logger.info(f"DELETE request body: {request.body.decode('utf-8')}")
             data = json.loads(request.body)
             conversation_id = data.get("id")
 
@@ -151,12 +136,10 @@ def chat_api(request):
             conversation.delete()
             return JsonResponse({"message": "Conversation deleted successfully"})
 
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON format"}, status=400)
+    except json.JSONDecodeError as e:
+        logger.error(f"JSON Decode Error: {e}")
+        return JsonResponse({"error": "Invalid JSON format"}, status=400)
 
-        except Exception as e:
-            logger.error(f"Internal server error: {str(e)}")
-            return JsonResponse({"error": f"Internal server error: {str(e)}"}, status=500)
-
-    else:
-        return JsonResponse({"error": "Method not allowed"}, status=405)
+    except Exception as e:
+        logger.error(f"Internal Server Error: {e}")
+        return JsonResponse({"error": f"Internal server error: {str(e)}"}, status=500)
