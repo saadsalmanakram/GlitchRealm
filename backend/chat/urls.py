@@ -1,6 +1,10 @@
-from django.urls import path
-from .views import chat_api  
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import ChatViewSet
+
+router = DefaultRouter()
+router.register(r'chat', ChatViewSet, basename='chat')
 
 urlpatterns = [
-    path('chat/', chat_api, name='chat_api'),  
+    path('', include(router.urls)),
 ]
