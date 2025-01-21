@@ -62,7 +62,7 @@ export default function ChatApp() {
 
   return (
     <div className="chat-app-container">
-      <div ref={chatContainerRef} className="chat-history">
+      <div ref={chatContainerRef} className="chat-history" style={{ overflowY: 'auto', maxHeight: '400px' }}>
         {chatHistory.map((chat, index) => (
           <div key={index} className={`chat-message ${chat.role === 'user' ? 'user' : 'ai'}`}>
             <p>{chat.message}</p>
@@ -72,7 +72,7 @@ export default function ChatApp() {
 
       {error && <div className="error-message">{error}</div>}
 
-      <div className="input-container">
+      <div className="input-container" style={{ position: 'sticky', bottom: '0', background: '#fff', padding: '10px' }}>
         <input
           type="text"
           value={userMessage}
