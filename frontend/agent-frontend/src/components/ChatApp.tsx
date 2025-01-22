@@ -30,7 +30,9 @@ export default function ChatApp() {
     setError(null);
 
     try {
+      // Sending POST request to the backend with user_id and user_message
       const response = await axios.post('http://127.0.0.1:8000/api/chat/', {
+        user_id: 'default_user', // You can replace this with dynamic user ID
         user_message: userMessage,
       });
 
