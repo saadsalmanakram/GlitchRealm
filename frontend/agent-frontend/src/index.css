@@ -76,6 +76,45 @@ body {
   box-shadow: 0 0 15px rgba(79, 163, 247, 0.7);
 }
 
+/* Minty Green Button Colors */
+.bg-mint-green-500 {
+  background-color: #66d9b1; /* Minty Green */
+}
+
+.bg-mint-green-600 {
+  background-color: #4db78b; /* Darker shade for hover */
+}
+
+.bg-mint-green-700 {
+  background-color: #3f9e7a; /* Even darker for active state */
+}
+
+/* Button Hover Effects */
+button {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Hover and Focus Effects */
+button:hover {
+  background-color: #4db78b;
+  transform: scale(1.05);
+}
+
+button:active {
+  background-color: #3f9e7a;
+  transform: scale(0.95);
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(102, 217, 177, 0.8); /* Focus glow effect */
+}
+
+/* Button with Shadow */
+button {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
 /* Chat App Styles */
 .chat-app-container {
   display: flex;
