@@ -13,16 +13,19 @@ export default function ChatApp() {
   const [error, setError] = useState<string | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
+  // Scroll to the bottom of the chat history when a new message is added
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [chatHistory]);
 
+  // Update the message state when the user types in the input field
   const handleMessageChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserMessage(e.target.value);
   };
 
+  // Handle sending the message to the backend API
   const handleSendMessage = async () => {
     if (!userMessage.trim() || loading) return;
 
@@ -30,18 +33,29 @@ export default function ChatApp() {
     setError(null);
 
     try {
+      // Sending message to the backend with the correct payload
       const response = await axios.post('http://127.0.0.1:8000/api/chat/', {
-        user_id: 'default_user',
-        user_message: userMessage,
+        message: userMessage,
       });
 
-      if (response.data.ai_response) {
-        setChatHistory(response.data.chat_history);
+      // Check if the response contains data
+      if (response.data) {
+        // Add the user message to the history
+        setChatHistory(prev => [
+          ...prev,
+          { role: 'user', message: userMessage }
+        ]);
+
+        // Add the AI's response to the history
+        setChatHistory(prev => [
+          ...prev,
+          { role: 'ai', message: response.data.response }
+        ]);
       } else {
         setError('No response from AI');
       }
 
-      setUserMessage('');
+      setUserMessage(''); // Clear input field after sending message
     } catch (err) {
       console.error('Error:', err);
       setError('Failed to send message. Please try again.');
@@ -50,12 +64,14 @@ export default function ChatApp() {
     setLoading(false);
   };
 
+  // Handle starting a new chat (clearing the chat history)
   const handleNewChat = () => {
     setChatHistory([]);
     setUserMessage('');
     setError(null);
   };
 
+  // Handle sending message when "Enter" is pressed
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
