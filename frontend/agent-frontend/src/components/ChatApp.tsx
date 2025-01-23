@@ -30,18 +30,13 @@ export default function ChatApp() {
     setError(null);
 
     try {
-      // Sending POST request to the backend with user_id and user_message
       const response = await axios.post('http://127.0.0.1:8000/api/chat/', {
-        user_id: 'default_user', // You can replace this with dynamic user ID
+        user_id: 'default_user',
         user_message: userMessage,
       });
 
       if (response.data.ai_response) {
-        setChatHistory((prevHistory) => [
-          ...prevHistory,
-          { role: 'user', message: userMessage },
-          { role: 'ai', message: response.data.ai_response },
-        ]);
+        setChatHistory(response.data.chat_history);
       } else {
         setError('No response from AI');
       }
