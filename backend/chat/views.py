@@ -10,13 +10,14 @@ class ChatViewSet(APIView):
     def post(self, request):
         try:
             user_message = request.data.get('message')
+            selected_model = request.data.get('model', "Qwen/Qwen2.5-0.5B-Instruct")  # Default model
+            
             if not user_message:
                 return Response(
                     {"error": "Message is required."},
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
-            # Get Hugging Face API Key from environment
             api_key = os.getenv('HUGGINGFACE_API_KEY')
             if not api_key:
                 return Response(
@@ -24,10 +25,8 @@ class ChatViewSet(APIView):
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
             
-            # Initialize Hugging Face client
             client = InferenceClient(api_key=api_key)
             
-            # Create messages list for the API
             messages = [
                 {
                     "role": "user",
@@ -35,9 +34,8 @@ class ChatViewSet(APIView):
                 }
             ]
             
-            # Get response from Hugging Face
             response = client.chat.completions.create(
-                model="Qwen/Qwen2.5-0.5B-Instruct",
+                model=selected_model,
                 messages=messages,
                 temperature=0.5,
                 max_tokens=2048,
@@ -53,16 +51,17 @@ class ChatViewSet(APIView):
             
             bot_response = response.choices[0].message.content
             
-            # Save the user message
+            # Save messages with the selected model
             user_msg = Message.objects.create(
                 text=user_message,
-                is_bot=False
+                is_bot=False,
+                model=selected_model
             )
             
-            # Save the bot response
             bot_msg = Message.objects.create(
                 text=bot_response,
-                is_bot=True
+                is_bot=True,
+                model=selected_model
             )
             
             return Response({
