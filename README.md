@@ -3,6 +3,14 @@
 
 # Artilence Project: AI Chatbot with Django Backend and Hugging Face Integration
 
+## Required Packages
+
+Before starting the project, install the necessary dependencies:
+
+```bash
+pip install django djangorestframework django-cors-headers requests python-dotenv
+```
+
 ## Overview
 
 The **Artilence Project** is an AI-powered chatbot built with a **Django backend** and integrated with the **Hugging Face API** for generating intelligent responses. The chatbot listens for user messages, sends them to Hugging Face's pre-trained models for processing, and returns generated responses. The backend API is designed to receive `POST` requests with a user's message and provide an AI-generated response. The project also includes a frontend interface to interact with the chatbot.
@@ -58,6 +66,7 @@ Make sure you have **Python 3.7+** and **pip** installed. Then, create a virtual
 ```bash
 python3 -m venv venv
 source venv/bin/activate  # On Windows, use venv\Scripts\activate
+pip install django djangorestframework django-cors-headers requests python-dotenv
 pip install -r requirements.txt
 ```
 
@@ -117,3 +126,4 @@ GitHub: [https://github.com/saadsalmanakram](https://github.com/saadsalmanakram)
 LinkedIn: [https://www.linkedin.com/in/saadsalmanakram/](https://www.linkedin.com/in/saadsalmanakram/)
 
 ---
+
