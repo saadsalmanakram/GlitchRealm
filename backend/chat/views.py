@@ -37,7 +37,7 @@ class ChatViewSet(APIView):
             
             # Get response from Hugging Face
             response = client.chat.completions.create(
-                model="google/gemma-1.1-7b-it",
+                model="Qwen/Qwen2.5-0.5B-Instruct",
                 messages=messages,
                 temperature=0.5,
                 max_tokens=2048,
