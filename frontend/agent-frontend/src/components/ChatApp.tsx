@@ -156,7 +156,7 @@ const ChatApp = () => {
         className="chat-history"
         style={{
           overflowY: 'auto',
-          height: 'calc(100vh - 180px)', // Adjusted height calculation
+          height: 'calc(100vh - 180px)', 
           background: 'rgba(255, 255, 255, 0.9)',
           backdropFilter: 'blur(10px)',
           borderRadius: '12px',
@@ -290,8 +290,33 @@ const ChatApp = () => {
               transition: 'all 0.2s ease'
             }
           }} >
-          {loading ? 'Sending...' : 'Send'}
+          {loading ? (
+            <svg 
+              width="24" 
+              height="24" 
+              viewBox="0 0 50 50" 
+              style={{ margin: 'auto', display: 'block' }}
+            >
+              <path 
+                d="M25,2C12.318,2,2,12.317,2,25s10.318,23,23,23s23-10.317,23-23S37.682,2,25,2z M29.36,32H13l7.64-14H37L29.36,32z" 
+                fill="#ffffff" 
+              />
+            </svg>
+          ) : (
+            <svg 
+              width="24" 
+              height="24" 
+              viewBox="0 0 50 50" 
+              style={{ margin: 'auto', display: 'block' }}
+            >
+              <path 
+                d="M25,2C12.318,2,2,12.317,2,25s10.318,23,23,23s23-10.317,23-23S37.682,2,25,2z M29.36,32H13l7.64-14H37L29.36,32z" 
+                fill="#ffffff" 
+              />
+            </svg>
+          )}
         </button>
+
         <button 
           onClick={handleNewChat} 
           className="new-chat-button"
@@ -308,8 +333,18 @@ const ChatApp = () => {
               transform: 'scale(1.02)',
               transition: 'all 0.2s ease'
             }
-          }}>
-          New Chat
+          }}
+        >
+          <img 
+            src="data:image/png;base64,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" 
+            alt="New Chat" 
+            style={{
+              width: '24px', 
+              height: '24px', 
+              display: 'block', 
+              margin: 'auto' 
+            }}
+          />
         </button>
       </div>
     </div>
