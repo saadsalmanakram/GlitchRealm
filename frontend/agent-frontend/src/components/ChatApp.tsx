@@ -9,25 +9,26 @@ interface ChatMessage {
 const ChatApp = () => {
   const [userMessage, setUserMessage] = useState('');
   const [selectedModel, setSelectedModel] = useState('meta-llama/Llama-3.2-1B-Instruct');
-  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]); 
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   // List of available models
   const models = [
+    'meta-llama/Llama-3.2-1B-Instruct',
     'google/gemma-1.1-2b-it',
     'google/gemma-2-2b-it',
-    'meta-llama/Llama-3.2-1B-Instruct',
+    'google/gemma-2-9b-it',
     'microsoft/Phi-3-mini-4k-instruct',
-    'microsoft/Phi-3.5-mini-instruct'
+    'microsoft/Phi-3.5-mini-instruct',
+    'HuggingFaceH4/starchat2-15b-v0.1'
   ];
 
   // Scroll to the bottom of the chat history when new messages are added
   useEffect(() => {
     const container = chatContainerRef.current;
     if (container) {
-      // Use setTimeout to ensure the DOM has updated
       setTimeout(() => {
         container.scrollTop = container.scrollHeight;
       }, 0);
@@ -47,28 +48,37 @@ const ChatApp = () => {
     setError(null);
 
     try {
-      // Sending message to the backend with the correct payload
+      // First, add the user message to the history
+      setChatHistory(prev => [
+        ...prev,
+        { role: 'user', message: userMessage }
+      ]);
+
+      // Show the loading state with SVG animation
+      setChatHistory(prev => [
+        ...prev,
+        { role: 'ai', message: 'LOADING Svg Animation' }
+      ]);
+
       const response = await axios.post('http://127.0.0.1:8000/api/chat/', {
         message: userMessage,
         model: selectedModel
       });
 
-      // Check if the response contains data
-      if (response.data) {
-        // Add the user message to the history
-        setChatHistory(prev => [
-          ...prev,
-          { role: 'user', message: userMessage }
-        ]);
-
-        // Add the AI's response to the history
-        setChatHistory(prev => [
-          ...prev,
-          { role: 'ai', message: response.data.response }
-        ]);
-      } else {
-        setError('No response from AI');
-      }
+      // Update the loading message with the actual response
+      setChatHistory(prev => {
+        const updatedHistory = [...prev];
+        if (
+          updatedHistory.length > 0 &&
+          updatedHistory[updatedHistory.length - 1].message === 'LOADING Svg Animation'
+        ) {
+          updatedHistory[updatedHistory.length - 1] = {
+            role: 'ai',
+            message: response.data.response
+          };
+        }
+        return updatedHistory;
+      });
 
       setUserMessage(''); // Clear input field after sending message
     } catch (err) {
@@ -94,10 +104,57 @@ const ChatApp = () => {
     }
   };
 
+  const LoadingAnimation = () => (
+    <svg
+      style={{
+        display: 'block',
+        margin: 'auto',
+        width: '35px',
+        height: '35px'
+      }}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 200 200"
+    >
+      <circle fill="#FF156D" stroke="#FF156D" stroke-width="15" r="15" cx="40" cy="65">
+        <animate
+          attributeName="cy"
+          calcMode="spline"
+          dur="2"
+          values="65;135;65;"
+          keySplines=".5 0 .5 1;.5 0 .5 1"
+          repeatCount="indefinite"
+          begin="-.4"
+        />
+      </circle>
+      <circle fill="#FF156D" stroke="#FF156D" stroke-width="15" r="15" cx="100" cy="65">
+        <animate
+          attributeName="cy"
+          calcMode="spline"
+          dur="2"
+          values="65;135;65;"
+          keySplines=".5 0 .5 1;.5 0 .5 1"
+          repeatCount="indefinite"
+          begin="-.2"
+        />
+      </circle>
+      <circle fill="#FF156D" stroke="#FF156D" stroke-width="15" r="15" cx="160" cy="65">
+        <animate
+          attributeName="cy"
+          calcMode="spline"
+          dur="2"
+          values="65;135;65;"
+          keySplines=".5 0 .5 1;.5 0 .5 1"
+          repeatCount="indefinite"
+          begin="0"
+        />
+      </circle>
+    </svg>
+  );
+
   return (
     <div className="chat-app-container">
       <div ref={chatContainerRef} className="chat-history" style={{ 
-        overflowY: 'auto', // Show scrollbar when needed
+        overflowY: 'auto',
         maxHeight: '400px',
         background: 'rgba(255, 255, 255, 0.9)',
         backdropFilter: 'blur(10px)',
@@ -105,37 +162,44 @@ const ChatApp = () => {
         border: '1px solid rgba(255, 255, 255, 0.3)',
         padding: '20px',
         transition: 'all 0.3s ease',
-        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)',
-        // Force scrollbar visibility and style it
-        scrollbarWidth: 'thin',
-        scrollbarColor: '#333 #f5f5f5'
+        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)'
       }}>
         {chatHistory.map((chat, index) => (
-          <div key={index} className={`chat-message ${chat.role === 'user' ? 'user' : 'ai'}`} style={{
-            marginBottom: '15px',
-            padding: '12px',
-            borderRadius: '10px',
-            background: 'rgba(255, 255, 255, 0.7)',
-            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-            ':hover': {
-              transform: 'translateY(-2px)',
-              transition: 'transform 0.2s ease'
-            }
-          }}>
-            <p style={{color: '#333', marginBottom: '0'}}>{chat.message}</p>
+          <div 
+            key={index} 
+            className={`chat-message ${chat.role === 'user' ? 'user' : 'ai'}`} 
+            style={{
+              marginBottom: '15px',
+              padding: '12px',
+              borderRadius: '10px',
+              background: 'rgba(255, 255, 255, 0.7)',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+              ':hover': {
+                transform: 'translateY(-2px)',
+                transition: 'transform 0.2s ease'
+              }
+            }}
+          >
+            {chat.message === 'LOADING Svg Animation' ? (
+              <LoadingAnimation />
+            ) : (
+              <p style={{ color: '#333', marginBottom: '0' }}>{chat.message}</p>
+            )}
           </div>
         ))}
       </div>
 
-      {error && <div className="error-message" style={{
-        padding: '10px',
-        backgroundColor: 'rgba(255, 0, 0, 0.1)',
-        color: 'red',
-        borderRadius: '8px',
-        margin: '10px 0'
-      }}>
-        {error}
-      </div>}
+      {error && (
+        <div className="error-message" style={{
+          padding: '10px',
+          backgroundColor: 'rgba(255, 0, 0, 0.1)',
+          color: 'red',
+          borderRadius: '8px',
+          margin: '10px 0'
+        }}>
+          {error}
+        </div>
+      )}
 
       <div className="input-container" style={{ 
         display: 'flex', 
@@ -166,7 +230,8 @@ const ChatApp = () => {
             ':hover': {
               backgroundColor: 'rgba(255, 255, 255, 0.8)'
             }
-          }}>
+          }}
+        >
           {models.map((model, index) => (
             <option 
               key={index} 
@@ -175,7 +240,8 @@ const ChatApp = () => {
                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
                 color: '#333',
                 padding: '8px',
-              }}>
+              }}
+            >
               {model.replace(/\/|-/g, ' ').replace('Instruct', '')}
             </option>
           ))}
