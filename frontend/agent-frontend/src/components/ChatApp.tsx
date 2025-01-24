@@ -9,7 +9,7 @@ interface ChatMessage {
 const ChatApp = () => {
   const [userMessage, setUserMessage] = useState('');
   const [selectedModel, setSelectedModel] = useState('Qwen/Qwen2.5-72B-Instruct');
-  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -17,22 +17,23 @@ const ChatApp = () => {
   // List of available models
   const models = [
     'Qwen/Qwen2.5-72B-Instruct',
-    'meta-llama/Llama-3.3-70B-Instruct',
-    'CohereForAI/c4ai-command-r-plus-08-2024',
-    'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
-    'nvidia/Llama-3.1-Nemotron-70B-Instruct-HF',
-    'Qwen/QwQ-32B-Preview',
-    'Qwen/Qwen2.5-Coder-32B-Instruct',
-    'meta-llama/Llama-3.2-11B-Vision-Instruct',
-    'NosResearch/Hermes-3-Llama-3.1-8B',
-    'mistralai/Mistral-Nemo-Instruct-2407',
-    'microsoft/Phi-3.5-mini-instruct'
+    'deepseek-ai/deepseek-coder-1.3b-instruct',
+    'google/gemma-1.1-2b-it',
+    'google/gemma-2-2b-it',
+    'meta-llama/Llama-3.2-1B-Instruct',
+    'microsoft/Phi-3-mini-4k-instruct',
+    'microsoft/Phi-3.5-mini-instruct',
+    'Qwen/Qwen2.5-0.5B-Instruct'
   ];
 
-  // Scroll to the bottom of the chat history when a new message is added
+  // Scroll to the bottom of the chat history when new messages are added
   useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    const container = chatContainerRef.current;
+    if (container) {
+      // Use setTimeout to ensure the DOM has updated
+      setTimeout(() => {
+        container.scrollTop = container.scrollHeight;
+      }, 0);
     }
   }, [chatHistory]);
 
@@ -99,25 +100,55 @@ const ChatApp = () => {
   return (
     <div className="chat-app-container">
       <div ref={chatContainerRef} className="chat-history" style={{ 
-        overflowY: 'auto', 
-        maxHeight: '400px' 
+        overflowY: 'auto', // Show scrollbar when needed
+        maxHeight: '400px',
+        background: 'rgba(255, 255, 255, 0.9)',
+        backdropFilter: 'blur(10px)',
+        borderRadius: '12px',
+        border: '1px solid rgba(255, 255, 255, 0.3)',
+        padding: '20px',
+        transition: 'all 0.3s ease',
+        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)',
+        // Force scrollbar visibility and style it
+        scrollbarWidth: 'thin',
+        scrollbarColor: '#333 #f5f5f5'
       }}>
         {chatHistory.map((chat, index) => (
-          <div key={index} className={`chat-message ${chat.role === 'user' ? 'user' : 'ai'}`}>
-            <p>{chat.message}</p>
+          <div key={index} className={`chat-message ${chat.role === 'user' ? 'user' : 'ai'}`} style={{
+            marginBottom: '15px',
+            padding: '12px',
+            borderRadius: '10px',
+            background: 'rgba(255, 255, 255, 0.7)',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+            ':hover': {
+              transform: 'translateY(-2px)',
+              transition: 'transform 0.2s ease'
+            }
+          }}>
+            <p style={{color: '#333', marginBottom: '0'}}>{chat.message}</p>
           </div>
         ))}
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <div className="error-message" style={{
+        padding: '10px',
+        backgroundColor: 'rgba(255, 0, 0, 0.1)',
+        color: 'red',
+        borderRadius: '8px',
+        margin: '10px 0'
+      }}>
+        {error}
+      </div>}
 
       <div className="input-container" style={{ 
         display: 'flex', 
         gap: '10px',
         position: 'sticky', 
         bottom: '0', 
-        background: '#fff', 
-        padding: '10px'
+        background: '#fff',
+        padding: '10px',
+        borderRadius: '8px',
+        boxShadow: '0 -2px 5px rgba(0, 0, 0, 0.1)'
       }}>
         <select 
           value={selectedModel}
@@ -125,31 +156,29 @@ const ChatApp = () => {
           className="model-select"
           style={{
             padding: '8px 12px',
-            backgroundColor: '#fff',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
             color: '#333',
-            border: '1px solid #ccc',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
             borderRadius: '4px',
             fontSize: '14px',
             cursor: 'pointer',
             ':focus': {
               outline: 'none',
-              boxShadow: '0 0 0 2px rgba(0, 123, 255, 0.25)',
+              boxShadow: '0 0 0 2px rgba(0, 123, 255, 0.25)'
             },
             ':hover': {
-              backgroundColor: '#f5f5f5',
+              backgroundColor: 'rgba(255, 255, 255, 0.8)'
             }
-          }}
-        >
+          }}>
           {models.map((model, index) => (
             <option 
               key={index} 
               value={model}
               style={{
-                backgroundColor: '#fff',
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
                 color: '#333',
                 padding: '8px',
-              }}
-            >
+              }}>
               {model.replace(/\/|-/g, ' ').replace('Instruct', '')}
             </option>
           ))}
@@ -165,14 +194,14 @@ const ChatApp = () => {
           style={{ 
             flexGrow: 1,
             padding: '8px 12px',
-            backgroundColor: '#fff',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
             color: '#333',
-            border: '1px solid #ccc',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
             borderRadius: '4px',
             fontSize: '14px',
             ':focus': {
               outline: 'none',
-              boxShadow: '0 0 0 2px rgba(0, 123, 255, 0.25)',
+              boxShadow: '0 0 0 2px rgba(0, 123, 255, 0.25)'
             }
           }}
         />
@@ -194,9 +223,10 @@ const ChatApp = () => {
             },
             ':hover': {
               backgroundColor: '#45a049',
+              transform: 'scale(1.02)',
+              transition: 'all 0.2s ease'
             }
-          }}
-        >
+          }}>
           {loading ? 'Sending...' : 'Send'}
         </button>
         <button 
@@ -212,9 +242,10 @@ const ChatApp = () => {
             fontWeight: '500',
             ':hover': {
               backgroundColor: '#e67e22',
+              transform: 'scale(1.02)',
+              transition: 'all 0.2s ease'
             }
-          }}
-        >
+          }}>
           New Chat
         </button>
       </div>
