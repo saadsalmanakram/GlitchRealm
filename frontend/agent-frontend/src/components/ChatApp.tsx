@@ -29,9 +29,7 @@ const ChatApp = () => {
   useEffect(() => {
     const container = chatContainerRef.current;
     if (container) {
-      setTimeout(() => {
-        container.scrollTop = container.scrollHeight;
-      }, 0);
+      container.scrollTop = container.scrollHeight;
     }
   }, [chatHistory]);
 
@@ -153,23 +151,27 @@ const ChatApp = () => {
 
   return (
     <div className="chat-app-container">
-      <div ref={chatContainerRef} className="chat-history" style={{ 
-        overflowY: 'auto',
-        maxHeight: '400px',
-        background: 'rgba(255, 255, 255, 0.9)',
-        backdropFilter: 'blur(10px)',
-        borderRadius: '12px',
-        border: '1px solid rgba(255, 255, 255, 0.3)',
-        padding: '20px',
-        transition: 'all 0.3s ease',
-        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)'
-      }}>
+      <div 
+        ref={chatContainerRef} 
+        className="chat-history"
+        style={{
+          overflowY: 'auto',
+          height: 'calc(100vh - 180px)', // Adjusted height calculation
+          background: 'rgba(255, 255, 255, 0.9)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '12px',
+          border: '1px solid rgba(255, 255, 255, 0.3)',
+          padding: '15px',
+          transition: 'all 0.3s ease',
+          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)'
+        }}
+      >
         {chatHistory.map((chat, index) => (
           <div 
-            key={index} 
-            className={`chat-message ${chat.role === 'user' ? 'user' : 'ai'}`} 
+            key={index}
+            className={`chat-message ${chat.role === 'user' ? 'user' : 'ai'}`}
             style={{
-              marginBottom: '15px',
+              marginBottom: '10px',
               padding: '12px',
               borderRadius: '10px',
               background: 'rgba(255, 255, 255, 0.7)',
@@ -207,7 +209,7 @@ const ChatApp = () => {
         position: 'sticky', 
         bottom: '0', 
         background: '#fff',
-        padding: '10px',
+        padding: '15px',
         borderRadius: '8px',
         boxShadow: '0 -2px 5px rgba(0, 0, 0, 0.1)'
       }}>
@@ -230,8 +232,7 @@ const ChatApp = () => {
             ':hover': {
               backgroundColor: 'rgba(255, 255, 255, 0.8)'
             }
-          }}
-        >
+          }}>
           {models.map((model, index) => (
             <option 
               key={index} 
@@ -240,8 +241,7 @@ const ChatApp = () => {
                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
                 color: '#333',
                 padding: '8px',
-              }}
-            >
+              }}>
               {model.replace(/\/|-/g, ' ').replace('Instruct', '')}
             </option>
           ))}
@@ -289,7 +289,7 @@ const ChatApp = () => {
               transform: 'scale(1.02)',
               transition: 'all 0.2s ease'
             }
-          }}>
+          }} >
           {loading ? 'Sending...' : 'Send'}
         </button>
         <button 

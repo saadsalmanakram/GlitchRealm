@@ -38,7 +38,6 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Mirror-like effect */
   color: #333; /* Dark color for visible text */
   backdrop-filter: blur(10px); /* Adds blur to background for mirror effect */
-  transition: all 0.3s ease; /* Smooth transition */
 }
 
 .mirror-effect:focus {
@@ -78,15 +77,7 @@ body {
 
 /* Minty Green Button Colors */
 .bg-mint-green-500 {
-  background-color: #66d9b1; /* Minty Green */
-}
-
-.bg-mint-green-600 {
-  background-color: #4db78b; /* Darker shade for hover */
-}
-
-.bg-mint-green-700 {
-  background-color: #3f9e7a; /* Even darker for active state */
+  background-color: #66d9b1;
 }
 
 /* Button Hover Effects */
@@ -107,12 +98,7 @@ button:active {
 
 button:focus {
   outline: none;
-  box-shadow: 0 0 5px rgba(102, 217, 177, 0.8); /* Focus glow effect */
-}
-
-/* Button with Shadow */
-button {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 5px rgba(102, 217, 177, 0.8);
 }
 
 /* Chat App Styles */
@@ -122,29 +108,34 @@ button {
   height: 100vh;
   justify-content: space-between;
   padding: 20px;
-  background: #1a1a1a; /* Dark background for the entire app */
+  background: #1a1a1a;
+  overflow-y: hidden;
 }
 
 .chat-history {
   flex-grow: 1;
   overflow-y: auto;
   margin-bottom: 20px;
-  padding: 10px;
-  background-color: #222; /* Slightly lighter background for the chat history */
-  border-radius: 10px;
+  padding: 15px;
+  background-color: #222;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .chat-message {
-  max-width: 70%;
-  padding: 10px;
+  max-width: 75%;
+  margin: 10px 0;
+  padding: 12px;
+  font-size: 16px;
   border-radius: 10px;
-  margin: 5px 0;
-  display: block;
+  background-color: rgba(255, 255, 255, 0.7);
+  color: #333;
+  word-wrap: break-word;
 }
 
 .chat-message.user {
   background-color: #0066cc;
-  color: #fff;
+  color: white;
   text-align: left;
   margin-right: auto;
 }
@@ -159,50 +150,58 @@ button {
 .input-container {
   display: flex;
   align-items: center;
-  padding: 10px;
+  gap: 15px;
+  padding: 15px;
   background-color: #222;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.input-container input {
-  flex-grow: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 20px;
-  margin-right: 10px;
-  background-color: #444;
-  color: #fff;
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-.input-container input:focus {
-  outline: none;
-  background-color: #555;
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
 }
 
-.input-container button {
-  padding: 10px 20px;
-  background-color: #0066cc;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
 }
 
-.input-container button:hover {
-  background-color: #005bb5;
-}
+/* Media Queries for Mobile Responsiveness */
+@media (max-width: 768px) {
+  .chat-app-container {
+    padding: 10px;
+  }
+  
+  .chat-history {
+    padding: 10px;
+    font-size: 14px;
+  }
 
-.input-container button:disabled {
-  background-color: #777;
-  cursor: not-allowed;
-}
+  .chat-message {
+    max-width: 85%;
+    padding: 10px;
+  }
 
-.chat-app-container .loading {
-  text-align: center;
-  color: #ddd;
-  font-style: italic;
+  .mirror-effect,
+  .input-field {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .input-container {
+    display: flex;
+    flex-flow: column;
+    gap: 8px;
+    padding: 10px;
+  }
 }
 
 /* Header and Footer */
@@ -212,5 +211,5 @@ header, footer {
   padding: 10px;
   text-align: center;
   border-radius: 10px;
+  margin: 10px 0;
 }
-
