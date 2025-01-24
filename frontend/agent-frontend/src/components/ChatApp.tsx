@@ -8,7 +8,7 @@ interface ChatMessage {
 
 const ChatApp = () => {
   const [userMessage, setUserMessage] = useState('');
-  const [selectedModel, setSelectedModel] = useState('Qwen/Qwen2.5-72B-Instruct');
+  const [selectedModel, setSelectedModel] = useState('meta-llama/Llama-3.2-1B-Instruct');
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -16,14 +16,11 @@ const ChatApp = () => {
 
   // List of available models
   const models = [
-    'Qwen/Qwen2.5-72B-Instruct',
-    'deepseek-ai/deepseek-coder-1.3b-instruct',
     'google/gemma-1.1-2b-it',
     'google/gemma-2-2b-it',
     'meta-llama/Llama-3.2-1B-Instruct',
     'microsoft/Phi-3-mini-4k-instruct',
-    'microsoft/Phi-3.5-mini-instruct',
-    'Qwen/Qwen2.5-0.5B-Instruct'
+    'microsoft/Phi-3.5-mini-instruct'
   ];
 
   // Scroll to the bottom of the chat history when new messages are added
