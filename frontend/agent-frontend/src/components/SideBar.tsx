@@ -31,7 +31,6 @@ const SideBar = ({ chatHistory, setActiveChat }: SideBarProps) => {
       <div
         className={`fixed left-0 top-0 h-full bg-gray-800 text-white p-4 overflow-y-auto border-r border-gray-700 transform ${isVisible ? "w-64 translate-x-0" : "w-0 -translate-x-full"} transition-all duration-300 ease-in-out`}
       >
-        <h2 className="text-lg font-bold mb-4">Chat History</h2>
         <ul>
           {chatHistory.map((session) => (
             <li
