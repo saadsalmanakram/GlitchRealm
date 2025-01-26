@@ -30,23 +30,6 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-/* Custom glossy effect for the search bar */
-.mirror-effect {
-  background: rgba(255, 255, 255, 0.5); /* Transparent white background */
-  border: 1px solid #ccc;
-  border-radius: 50px; /* Fully rounded corners */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Mirror-like effect */
-  color: #333; /* Dark color for visible text */
-  backdrop-filter: blur(10px); /* Adds blur to background for mirror effect */
-}
-
-.mirror-effect:focus {
-  outline: none;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Stronger shadow on focus */
-  border-color: rgba(255, 255, 255, 0.8); /* Brighter border on focus */
-  background: rgba(255, 255, 255, 0.7); /* Slightly more opaque background on focus */
-}
-
 /* Shiny Gradient Effect for the Search Bar */
 .shiny-glossy-effect {
   background: linear-gradient(
