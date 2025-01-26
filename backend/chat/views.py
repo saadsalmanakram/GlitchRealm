@@ -49,10 +49,15 @@ class ChatViewSet(APIView):
             
             bot_response = response.choices[0].message.content
             
-            return Response({
+            # Create a simple dictionary response
+            response_data = {
                 "status": "success",
-                "response": bot_response
-            })
+                "response": bot_response,
+                "model": selected_model,
+                "timestamp": response.choices[0].message.finish_reason
+            }
+            
+            return Response(response_data, status=status.HTTP_200_OK)
             
         except Exception as e:
             return Response(
