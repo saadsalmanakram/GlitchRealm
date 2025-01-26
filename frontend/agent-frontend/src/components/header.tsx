@@ -10,12 +10,12 @@ const Header = () => {
             <img
               src={viteLogo}
               className="w-20 h-20 animate-heartbeat transform transition duration-300 mt-2"
-              alt="Artilence logo"
+              alt="Chatbot logo"
             />
           </a>
         </div>
         <h1 className="lg:text-4xl font-extrabold bg-clip-text text-transparent shining-gradient mt-5">
-          Artilence Agent
+          Chatbot Agent
         </h1>
       </header>
     </section>
