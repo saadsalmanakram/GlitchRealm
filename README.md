@@ -8,7 +8,7 @@
 Before starting the project, install the necessary dependencies:
 
 ```bash
-pip install django djangorestframework django-cors-headers requests python-dotenv
+pip install django djangorestframework django-cors-headers requests python-dotenv huggingface_hub
 ```
 
 ## Overview
