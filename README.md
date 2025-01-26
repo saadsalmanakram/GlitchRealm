@@ -1,7 +1,7 @@
 
 ---
 
-# Artilence Project: AI Chatbot with Django Backend and Hugging Face Integration
+# Chatbot Agent: AI Chatbot with Django Backend and Hugging Face Integration
 
 ## Required Packages
 
