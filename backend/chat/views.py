@@ -8,7 +8,7 @@ class ChatViewSet(APIView):
     def post(self, request):
         try:
             user_message = request.data.get('message')
-            selected_model = request.data.get('model', "Qwen/Qwen2.5-0.5B-Instruct")
+            selected_model = request.data.get('model', "meta-llama/Llama-3.2-1B-Instruct")
 
             if not user_message:
                 return Response(
