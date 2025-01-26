@@ -93,8 +93,8 @@ Develop a small web application that uses an AI model (OpenAI or any other LLM) 
 To get started, clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/saadsalmanakram/artilence-project.git
-cd artilence-project
+git clone https://github.com/saadsalmanakram/chatbot-agent.git
+cd chatbot-agent
 ```
 
 ### 2. **Backend Setup (Django)**
