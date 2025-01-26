@@ -1,75 +1,58 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
-from langchain_core.prompts import MessagesPlaceholder
-from langgraph.graph import START, StateGraph
-from langgraph.checkpoint.memory import MemorySaver
-from typing import List, Dict, Any
-import json
-import uuid
-from typing_extensions import Annotated
-from langgraph.graph.message import add_state, add_messages
-
-# Define your state schema
-class State(TypedDict):
-    messages: Annotated[List[BaseMessage], add_messages]
-    memory_key: str
-
-# Initialize LangGraph components
-workflow = StateGraph(state_schema=State)
-
-def call_model(state: State):
-    # Get the current messages
-    messages = state['messages']
-    
-    # Create a new AIMessage from the last human message
-    if messages and isinstance(messages[-1], HumanMessage):
-        response = "This is a test response."
-        new_message = AIMessage(content=response)
-        messages = messages + [new_message]
-    
-    return {"messages": messages}
-
-# Set up your LangGraph workflow
-workflow.add_edge(START, "model")
-workflow.add_node("model", call_model)
-
-# Initialize memory
-memory = MemorySaver()
-langgraph_app = workflow.compile(checkpointer=memory)
+from huggingface_hub import InferenceClient
+import os
 
 class ChatViewSet(APIView):
     def post(self, request):
         try:
             user_message = request.data.get('message')
+            selected_model = request.data.get('model', "Qwen/Qwen2.5-0.5B-Instruct")
+
             if not user_message:
                 return Response(
                     {"error": "Message is required."},
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-            # Generate a unique conversation key if not provided
-            conversation_key = request.data.get('conversation_key', str(uuid.uuid4()))
-            
-            # Create HumanMessage from user input
-            input_message = HumanMessage(content=user_message)
-            
-            # Invoke LangGraph app with conversation key
-            state = langgraph_app.invoke(
+            api_key = os.getenv('HUGGINGFACE_API_KEY')
+            if not api_key:
+                return Response(
+                    {"error": "Hugging Face API key not configured."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+
+            client = InferenceClient(api_key=api_key)
+
+            messages = [
                 {
-                    "messages": [input_message],
-                    "memory_key": conversation_key
+                    "role": "user",
+                    "content": user_message
                 }
+            ]
+
+            response = client.chat.completions.create(
+                model=selected_model,
+                messages=messages,
+                temperature=0.5,
+                max_tokens=2048,
+                top_p=0.7,
+                stream=False
             )
 
-            # Extract bot response from messages
-            bot_response = state['messages'][-1].content
+            if not response or not response.choices:
+                return Response(
+                    {"error": "No response from Hugging Face API"},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+
+            bot_response = response.choices[0].message.content
 
             response_data = {
                 "status": "success",
                 "response": bot_response,
-                "conversation_key": conversation_key
+                "model": selected_model
             }
 
             return Response(response_data, status=status.HTTP_200_OK)
