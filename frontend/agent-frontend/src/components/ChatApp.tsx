@@ -132,14 +132,15 @@ const ChatApp = () => {
         <select 
           value={selectedModel}
           onChange={(e) => setSelectedModel(e.target.value)}
-          className="model-select p-2 bg-black/20 rounded-lg border border-purple-500 text-purple-300
-            focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+          className="model-select p-2 bg-gray-700 rounded-lg border border-purple-500 text-white
+            focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all
+            hover:bg-gray-600"
         >
           {models.map((model, index) => (
             <option 
               key={index} 
               value={model}
-              className="text-purple-300 hover:bg-purple-700/20"
+              className="text-white hover:bg-gray-500"
             >
               {model.replace(/\/|-/g, ' ').replace('Instruct', '')}
             </option>
