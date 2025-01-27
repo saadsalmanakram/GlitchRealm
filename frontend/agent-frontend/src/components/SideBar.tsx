@@ -22,7 +22,10 @@ const SideBar = ({ chatHistory, setActiveChat }: SideBarProps) => {
       {/* Sidebar Toggle Button */}
       <button
         onClick={() => setIsVisible(!isVisible)}
-        className="fixed left-2 top-2 bg-mint-green-500 text-white p-2 rounded shadow-md transition-all hover:bg-mint-green-600 hover:scale-105 active:scale-95 z-50"
+        className="fixed left-2 top-2 px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg font-medium
+          hover:from-purple-700 hover:to-blue-700 hover:scale-105
+          active:scale-95 shadow-xl border border-purple-500 text-white
+          transition-all disabled:opacity-50 disabled:cursor-not-allowed z-50"
       >
         {isVisible ? "Hide" : "Show"} Chat History
       </button>

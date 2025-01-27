@@ -71,7 +71,7 @@ const ChatApp = () => {
         return updatedHistory;
       });
 
-      setUserMessage(''); 
+      setUserMessage('');
     } catch (err) {
       console.error('Error:', err);
       setError('Failed to send message. Please try again.');
@@ -93,207 +93,91 @@ const ChatApp = () => {
     }
   };
 
-  const LoadingAnimation = () => (
-    <svg
-      style={{
-        display: 'block',
-        margin: 'auto',
-        width: '35px',
-        height: '35px'
-      }}
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 200 200"
-    >
-      <circle fill="#FF156D" stroke="#FF156D" stroke-width="15" r="15" cx="40" cy="65">
-        <animate
-          attributeName="cy"
-          calcMode="spline"
-          dur="2"
-          values="65;135;65;"
-          keySplines=".5 0 .5 1;.5 0 .5 1"
-          repeatCount="indefinite"
-          begin="-.4"
-        />
-      </circle>
-      <circle fill="#FF156D" stroke="#FF156D" stroke-width="15" r="15" cx="100" cy="65">
-        <animate
-          attributeName="cy"
-          calcMode="spline"
-          dur="2"
-          values="65;135;65;"
-          keySplines=".5 0 .5 1;.5 0 .5 1"
-          repeatCount="indefinite"
-          begin="-.2"
-        />
-      </circle>
-      <circle fill="#FF156D" stroke="#FF156D" stroke-width="15" r="15" cx="160" cy="65">
-        <animate
-          attributeName="cy"
-          calcMode="spline"
-          dur="2"
-          values="65;135;65;"
-          keySplines=".5 0 .5 1;.5 0 .5 1"
-          repeatCount="indefinite"
-          begin="0"
-        />
-      </circle>
-    </svg>
-  );
-
   return (
-    <div className="chat-app-container">
+    <div className="chat-app-container flex flex-col h-full space-chat">
       <div 
         ref={chatContainerRef} 
-        className="chat-history"
-        style={{
-          overflowY: 'auto',
-          height: 'calc(100vh - 180px)', 
-          background: 'rgba(255, 255, 255, 0.9)',
-          backdropFilter: 'blur(10px)',
-          borderRadius: '12px',
-          border: '1px solid rgba(255, 255, 255, 0.3)',
-          padding: '15px',
-          transition: 'all 0.3s ease',
-          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)'
-        }}
+        className="chat-history flex flex-col flex-grow space-y-4 p-4 overflow-y-auto backdrop-blur-sm border rounded-xl border-purple-500 bg-black/10 text-white"
+        style={{ height: 'calc(100vh - 180px)' }}
       >
         {chatHistory.map((chat, index) => (
           <div 
             key={index}
-            className={`chat-message ${chat.role === 'user' ? 'user' : 'ai'}`}
-            style={{
-              marginBottom: '10px',
-              padding: '12px',
-              borderRadius: '10px',
-              background: 'rgba(255, 255, 255, 0.7)',
-              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-              ':hover': {
-                transform: 'translateY(-2px)',
-                transition: 'transform 0.2s ease'
-              }
-            }}
+            className={`chat-message ${chat.role === 'user' ? 'user' : 'ai'} p-4 rounded-lg transition-all duration-300 space-message`}
           >
             {chat.message === 'LOADING Svg Animation' ? (
-              <LoadingAnimation />
+              <div className="flex justify-center items-center w-full h-20 animate-pulse">
+                <div 
+                  className="w-8 h-8 border-4 border-white border-t-transparent rounded-full"
+                  style={{
+                    animation: 'spin 1s linear infinite',
+                    boxShadow: '0 0 15px 5px rgba(102, 204, 255, 0.3)'
+                  }}
+                ></div>
+              </div>
             ) : (
-              <p style={{ color: '#333', marginBottom: '0' }}>{chat.message}</p>
+              <p className="text-sm">{chat.message}</p>
             )}
           </div>
         ))}
       </div>
 
       {error && (
-        <div className="error-message" style={{
-          padding: '10px',
-          backgroundColor: 'rgba(255, 0, 0, 0.1)',
-          color: 'red',
-          borderRadius: '8px',
-          margin: '10px 0'
-        }}>
+        <div className="error-message p-3 bg-red-900/30 bg-clip-text text-red-400 rounded-lg mt-4 mb-4 text-center animate-heartbeat">
           {error}
         </div>
       )}
 
-      <div className="input-container" style={{ 
-        display: 'flex', 
-        gap: '10px',
-        position: 'sticky', 
-        bottom: '0', 
-        background: '#fff',
-        padding: '15px',
-        borderRadius: '8px',
-        boxShadow: '0 -2px 5px rgba(0, 0, 0, 0.1)'
-      }}>
+      <div className="input-container flex items-center gap-4 p-4 border-t border-purple-500 backdrop-blur-sm">
         <select 
           value={selectedModel}
           onChange={(e) => setSelectedModel(e.target.value)}
-          className="model-select"
-          style={{
-            padding: '8px 12px',
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-            color: '#333',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
-            borderRadius: '4px',
-            fontSize: '14px',
-            cursor: 'pointer',
-            ':focus': {
-              outline: 'none',
-              boxShadow: '0 0 0 2px rgba(0, 123, 255, 0.25)'
-            },
-            ':hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.8)'
-            }
-          }}>
+          className="model-select p-2 bg-black/20 rounded-lg border border-purple-500 text-purple-300
+            focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+        >
           {models.map((model, index) => (
             <option 
               key={index} 
               value={model}
-              style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                color: '#333',
-                padding: '8px',
-              }}>
+              className="text-purple-300 hover:bg-purple-700/20"
+            >
               {model.replace(/\/|-/g, ' ').replace('Instruct', '')}
             </option>
           ))}
         </select>
+
         <input
           type="text"
           value={userMessage}
           onChange={handleMessageChange}
           onKeyDown={handleKeyDown}
-          placeholder="Type a message..."
+          placeholder="Enter your command..."
           disabled={loading}
-          className="input-field"
-          style={{ 
-            flexGrow: 1,
-            padding: '8px 12px',
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-            color: '#333',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
-            borderRadius: '4px',
-            fontSize: '14px',
-            ':focus': {
-              outline: 'none',
-              boxShadow: '0 0 0 2px rgba(0, 123, 255, 0.25)'
-            }
-          }}
+          className="input-field flex-grow p-2 bg-black/20 rounded-lg border border-purple-500
+            focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none
+            hover:bg-black/30 transition-all space-input"
+          style={{ paddingRight: '80px' }}
         />
+
         <button 
           onClick={handleSendMessage} 
           disabled={loading}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            fontSize: '14px',
-            ':disabled': {
-              backgroundColor: '#696969',
-              cursor: 'not-allowed'
-            },
-            ':hover': {
-              backgroundColor: '#45a049'
-            }
-          }}>
-          Enter
+          className="send-button px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg font-medium
+            hover:from-purple-700 hover:to-blue-700 hover:scale-105
+            active:scale-95 shadow-xl border border-purple-500 text-white
+            transition-all disabled:opacity-50 disabled:cursor-not-allowed space-button"
+        >
+          Send
         </button>
 
         <button
           onClick={handleNewChat}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#ff4444',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            fontSize: '14px',
-            ':hover': {
-              backgroundColor: '#cc0000'
-            }
-          }}>
-          Reset
+          className="reset-button px-6 py-2 bg-gradient-to-r from-red-600 to-pink-600 rounded-lg font-medium
+            hover:from-red-700 hover:to-pink-700 hover:scale-105
+            active:scale-95 shadow-xl border border-red-500 text-white
+            transition-all space-button"
+        >
+          New Chat
         </button>
       </div>
     </div>
